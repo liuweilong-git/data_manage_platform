@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: manage.web
+  servlet:
+    multipart:
+      max-file-size: 22MB # 单个上传文件的最大大小
+      max-request-size: 22MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: root
+    password: 101423CEce
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+#    druid:
+#      initial-size: 5
+#      min-idle: 5
+#      max-active: 20
+#      max-wait: 60000
+#      time-between-eviction-runs-millis: 60000
+#      min-evictable-idle-time-millis: 300000
+#      validation-query: SELECT 1
+#      test-while-idle: true
+#      test-on-borrow: false
+#      test-on-return: false
+#      pool-prepared-statements: true
+#      max-pool-prepared-statement-per-connection-size: 20
+#      filters: stat,wall,log4j
+
+
+#  autoconfigure:
+#    exclude=org:
+#      springframework:
+#        boot:
+#          autoconfigure:
+#            jdbc:
+#              DataSourceAutoConfiguration,org:
+#                springframework:
+#                  boot:
+#                    autoconfigure:
+#                      jdbc:
+#                        DataSourceTransactionManagerAutoConfiguration:
+#
+server:
+  port: 8080
+#debug: true
+
+#  表示在类路径下的 mapper 文件夹中查找所有的 .xml 文件。
+#必须: 如果你的项目中使用了 XML 形式的 Mapper 文件（即定义了 Mapper XML 文件来写 SQL 语句），则需要配置。如果没有使用 XML 形式的 Mapper 文件，则可以不配置。
+#解释: 指定 MyBatis-Plus 扫描的实体类的位置，这样可以在 Mapper XML 中使用简短的别名来引用实体类。
+#示例: com.example.entity 表示在 com.example.entity 包下的所有类都可以作为 MyBatis 的别名使用。
+#必须: 如果在 Mapper XML 文件中使用了简短的别名来引用实体类，则需要配置。如果没有使用 XML 形式的 Mapper 文件，或者没有使用别名，则可以不配置。
+#mybatis-plus:
+#  mapper-locations: classpath*:/mapper/*.xml
+#  type-aliases-package: com.example.entity

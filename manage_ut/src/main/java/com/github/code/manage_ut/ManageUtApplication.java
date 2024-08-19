@@ -9,7 +9,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.github.code.manage_ut","com.github.code.manage_web"})
-@MapperScan(basePackages = "com.github.code.manage_web.dao")
+@MapperScan(basePackages = "com.github.code.manage_web.mapper")
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class ManageUtApplication {
 

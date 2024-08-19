@@ -1,10 +1,8 @@
-package com.github.code.manage_web.dao;
+package com.github.code.manage_web.mapper.test;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.github.code.manage_web.domain.Book;
-import org.springframework.web.bind.annotation.Mapping;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
 //mybatis写法
 //@Mapper

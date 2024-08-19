@@ -13,11 +13,59 @@
 #      driver-class-name: com.mysql.cj.jdbc.Driver
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/test
-    username: root
-    password: 101423CEce
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    type: com.alibaba.druid.pool.DruidDataSource
+
+#    db-test:
+#      jdbc-url: jdbc:mysql://localhost:3306/test
+#      username: root
+#      password: 101423CEce
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      type: com.alibaba.druid.pool.DruidDataSource
+#    db-crm:
+#      url: jdbc:mysql://localhost:3306/crm
+#      username: root
+#      password: 101423CEce
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      type: com.alibaba.druid.pool.DruidDataSource
+
+#    url: jdbc:mysql://localhost:3306/test
+#    username: root
+#    password: 101423CEce
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    type: com.alibaba.druid.pool.DruidDataSource
+    dynamic:
+      datasource:
+        test:
+          url: jdbc:mysql://localhost:3306/test
+          username: root
+          password: 101423CEce
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          type: com.alibaba.druid.pool.DruidDataSource
+        crm:
+          url: jdbc:mysql://localhost:3306/crm
+          username: root
+          password: 101423CEce
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          type: com.alibaba.druid.pool.DruidDataSource
+        cont:
+          url: jdbc:mysql://localhost:3306/cont
+          username: root
+          password: 101423CEce
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          type: com.alibaba.druid.pool.DruidDataSource
+        cert:
+          url: jdbc:mysql://localhost:3306/cert
+          username: root
+          password: 101423CEce
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          type: com.alibaba.druid.pool.DruidDataSource
+        manage:
+          url: jdbc:mysql://localhost:3306/data_manage
+          username: root
+          password: 101423CEce
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          type: com.alibaba.druid.pool.DruidDataSource
+      primary: test
+      # 默认数据源
     druid:
       # 初始化时建立物理连接的个数
       initial-size: 5
@@ -42,7 +90,7 @@ spring:
       # 是否缓存preparedStatement, 也就是PSCache,PSCache对支持游标的数据库性能提升巨大，比如说oracle,在mysql下建议关闭。
       pool-prepared-statements: false
       # 置监控统计拦截的filters，去掉后监控界面sql无法统计，stat: 监控统计、Slf4j:日志记录、waLL: 防御sqL注入
-      filters: stat,wall,slf4j
+#      filters: stat,wall,slf4j
       # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。在Druid中，不会存在Oracle下PSCache占用内存过多的问题，可以把这个数值配置大一些，比如说100
       max-pool-prepared-statement-per-connection-size: -1
       # 合并多个DruidDataSource的监控数据
@@ -71,24 +119,24 @@ spring:
         # IP黑名单（共同存在时，deny优先于allow）
         deny:
 
-      keepAlive: true
+#    keepAlive: true
 
-      filter:
-        # sql监控
-
-        stat:
-#          enabled: true
-          db-type: mysql
-          log-slow-sql: true
-          slow-sql-millis: 2000
-          connection-stack-trace-enable: true
-          slow-sql-log-level: info
-          # 防火墙
-        wall:
-          db-type: mysql
-          config:
-            delete-allow: false
-            drop-table-allow: false
+#    filter:
+#      # sql监控
+#
+#      stat:
+#  #          enabled: true
+#        db-type: mysql
+#        log-slow-sql: true
+#        slow-sql-millis: 2000
+#        connection-stack-trace-enable: true
+#        slow-sql-log-level: info
+#        # 防火墙
+#      wall:
+#        db-type: mysql
+#        config:
+#          delete-allow: false
+#          drop-table-allow: false
 
 server:
   port: 80

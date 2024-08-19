@@ -1,6 +1,6 @@
 package com.github.code.manage_web;
 
-import com.github.code.manage_web.dao.CommentDao;
+import com.github.code.manage_web.mapper.test.CommentDao;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

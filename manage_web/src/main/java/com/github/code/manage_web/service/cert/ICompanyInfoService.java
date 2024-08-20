@@ -11,6 +11,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author author
  * @since 2024-08-19
  */
+
 public interface ICompanyInfoService extends IService<CompanyInfo> {
+    CompanyInfo getCompanyInfoByCustomerId(Integer customerId);
+    Boolean updateCompanyInfoByCustomerID(Integer customerId ,Object value, String fields);
 
 }

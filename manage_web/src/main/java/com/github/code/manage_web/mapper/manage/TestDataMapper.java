@@ -1,7 +1,9 @@
 package com.github.code.manage_web.mapper.manage;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.github.code.manage_web.domain.manage.TestData;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * <p>
@@ -11,6 +13,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author author
  * @since 2024-08-19
  */
+@Mapper
+@DS("manage")
 public interface TestDataMapper extends BaseMapper<TestData> {
 
 }

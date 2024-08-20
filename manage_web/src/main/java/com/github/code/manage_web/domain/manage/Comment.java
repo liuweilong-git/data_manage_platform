@@ -3,6 +3,8 @@ package com.github.code.manage_web.domain.manage;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+
+import java.io.Serial;
 import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,6 +27,7 @@ import lombok.experimental.Accessors;
 @Schema(name="Comment对象", description="")
 public class Comment implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 //@SpringBootApplication(exclude={DataSourceAutoConfiguration.class}) 没有数据库时需要添加才能成功
 @SpringBootApplication
@@ -22,6 +23,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 //@EnableConfigurationProperties({DruidStatProperties.class, DataSourceProperties.class})
 //@MapperScan(basePackages = {"com.github.code.manage_web.mapper.test"}, sqlSessionFactoryRef = "sqlSessionFactoryTest")
 //@MapperScan(basePackages = {"com.rain.mapper.user"}, sqlSessionFactoryRef = "sqlSessionFactoryUser")
+@EnableScheduling
 public class ManageWebApplication {
 
     public static void main(String[] args) {

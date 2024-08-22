@@ -32,6 +32,7 @@ public class RunInstanceDto {
         dto.setAttrId(runInstance.getAttrId());
         dto.setAtomicId(runInstance.getAtomicId());
         dto.setAfterValue(runInstance.getAfterValue());
+        //需要添加一些其他元素
 
 
         return dto;

@@ -3,12 +3,9 @@ package com.github.code.manage_web.service.cert.handle;
 import com.github.code.manage_web.dto.RunInstanceDto;
 import com.github.code.manage_web.service.common.handle.UpdateStrategy;
 import com.github.code.manage_web.domain.cert.CompanyInfo;
-import com.github.code.manage_web.service.cert.ICompanyInfoService;
 import com.github.code.manage_web.service.impl.CompanyInfoServiceImpl;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Slf4j

@@ -14,6 +14,7 @@ public class RunInstanceDto {
     private String batchId;
     private String testDataId;
     private Integer customerId;
+    private String contId;
     //    test_data_attribute表中主键id
     private Integer attrId;
     private String valueType;

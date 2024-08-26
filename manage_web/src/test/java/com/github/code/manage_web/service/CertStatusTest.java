@@ -29,7 +29,7 @@ public class CertStatusTest {
     @Test
     void testUpdate(){
         RunInstanceDto data = new RunInstanceDto();
-        data.setCustomerId(6001234);
+        data.setCustomerId("6001234");
         Integer value = 2;
         updateCertStatus.update(data,value);
     }
@@ -37,7 +37,7 @@ public class CertStatusTest {
     @Test
     void testUpdateString(){
         RunInstanceDto data = new RunInstanceDto();
-        data.setCustomerId(6001234);
+        data.setCustomerId("6001234");
         String value = "ninhao";
         updateQualificationType.update(data,value);
     }
@@ -45,7 +45,7 @@ public class CertStatusTest {
     @Test
     void testUpdateRunInstance(){
         RunInstanceDto data = new RunInstanceDto();
-        data.setCustomerId(6001234);
+        data.setCustomerId("6001234");
         data.setAttrId(2);
         data.setId(1);
         updateService.update(data);

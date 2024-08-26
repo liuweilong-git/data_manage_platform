@@ -2,12 +2,17 @@ package com.github.code.manage_web.service.crm.handle;
 
 
 import com.github.code.manage_web.domain.crm.Customers;
+import com.github.code.manage_web.domain.manage.AccountInfo;
 import com.github.code.manage_web.dto.RunInstanceDto;
+import com.github.code.manage_web.dto.TestDataDto;
 import com.github.code.manage_web.service.common.handle.UpdateStrategy;
 import com.github.code.manage_web.service.impl.CustomersServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -16,9 +21,18 @@ public class UpdateBusinessType implements UpdateStrategy {
     private CustomersServiceImpl customersServiceImpl;
 
     @Override
+    public Map<String, Object> select(AccountInfo accountInfo) {
+        String customer_id = accountInfo.getCustomerId();
+        Customers customers = customersServiceImpl.getCustomerInfoByCustomerId(customer_id);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("businessType", customers.getBusinessType());
+        return resultMap;
+    }
+
+    @Override
     public boolean update(RunInstanceDto data, Object value) {
 
-        int customer_id = data.getCustomerId();
+        String customer_id = String.valueOf(data.getCustomerId());
         try {
             Customers customers = customersServiceImpl.getCustomerInfoByCustomerId(customer_id);
             log.info("查询出了相关数据 customer_id: {} customer_info {}", customer_id, customers);

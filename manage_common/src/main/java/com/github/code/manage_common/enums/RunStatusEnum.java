@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum RunStatus {
+public enum RunStatusEnum {
     ADD_SUCCESS (1, "'创建成功'"),
     SEND_SUCCESS (2, "'运行中'"),
     RUN_SUCCESS (3, "'运行成功'"),

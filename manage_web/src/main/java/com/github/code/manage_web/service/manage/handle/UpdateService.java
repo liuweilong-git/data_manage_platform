@@ -1,6 +1,6 @@
 package com.github.code.manage_web.service.manage.handle;
 
-import com.github.code.manage_common.enums.RunStatus;
+import com.github.code.manage_common.enums.RunStatusEnum;
 import com.github.code.manage_web.domain.manage.CnfAtomic;
 import com.github.code.manage_web.domain.manage.TestDataAttribute;
 import com.github.code.manage_web.dto.RunInstanceDto;
@@ -8,6 +8,7 @@ import com.github.code.manage_web.service.common.handle.UpdateStrategy;
 import com.github.code.manage_web.service.impl.CnfAtomicServiceImpl;
 import com.github.code.manage_web.service.impl.RunInstanceServiceImpl;
 import com.github.code.manage_web.service.impl.TestDataAttributeServiceImpl;
+import com.github.code.manage_web.service.impl.TestDataServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +58,14 @@ public class UpdateService {
             if (strategy.update(data, data_attribute.getExpectedValue())){
 //              3.更新run_instance表的数据查询条件id），更新run_status为运行完成，after_value为预期值
                 Map<String, Object> updateData = new HashMap<>();
-                updateData.put("run_status", RunStatus.ADD_SUCCESS.getCode());
+                updateData.put("run_status", RunStatusEnum.ADD_SUCCESS.getCode());
                 updateData.put("after_value", data_attribute.getExpectedValue());
                 log.info("数据实际值更新为预期值{}",updateData);
                 runInstanceService.updateRunInstanceByAttrId(data, updateData);
             }
             else {
                 Map<String, Object> updateData = new HashMap<>();
-                updateData.put("run_status", RunStatus.RUN_FAILED.getCode());
+                updateData.put("run_status", RunStatusEnum.RUN_FAILED.getCode());
                 log.info("数据实际值更新失败预期值为{}",updateData);
                 runInstanceService.updateRunInstanceByAttrId(data, updateData);
             }

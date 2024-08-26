@@ -24,11 +24,11 @@ public class CompanyInfoServiceImpl extends ServiceImpl<CompanyInfoMapper, Compa
     @Resource
     private CompanyInfoMapper companyInfoMapper;
 
-    public CompanyInfo getCompanyInfoByCustomerId(Integer customerId) {
+    public CompanyInfo getCompanyInfoByCustomerId(String customerId) {
         return companyInfoMapper.selectOne(new QueryWrapper<CompanyInfo>().eq("customer_id", customerId));
     }
 
-    public Boolean updateCompanyInfoByCustomerID(Integer customerId ,Object value, String fields) {
+    public Boolean updateCompanyInfoByCustomerID(String customerId ,Object value, String fields) {
         UpdateWrapper<CompanyInfo> updateWrapper = new UpdateWrapper<CompanyInfo>()
                 .set(fields,value)
                 .eq("customer_id",customerId);

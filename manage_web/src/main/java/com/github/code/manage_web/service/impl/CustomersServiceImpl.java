@@ -25,11 +25,11 @@ public class CustomersServiceImpl extends ServiceImpl<CustomersMapper, Customers
     @Resource
     private CustomersMapper customersMapper;
 
-    public Customers getCustomerInfoByCustomerId(Integer customerId) {
+    public Customers getCustomerInfoByCustomerId(String customerId) {
         return customersMapper.selectOne(new QueryWrapper<Customers>().eq("customer_id", customerId));
     }
 
-    public Boolean updateCustomerInfoByCustomerID(Integer customerId ,Object value, String fields) {
+    public Boolean updateCustomerInfoByCustomerID(String customerId ,Object value, String fields) {
         UpdateWrapper<Customers> updateWrapper = new UpdateWrapper<Customers>()
                 .set(fields,value)
                 .eq("customer_id",customerId);

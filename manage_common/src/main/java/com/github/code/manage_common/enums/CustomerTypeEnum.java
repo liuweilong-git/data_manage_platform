@@ -5,11 +5,13 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ContType {
+public enum CustomerTypeEnum {
 
-    SELF_AGREEMENT (102, "自助商务合作协议"),
-    DIRECT_AGREEMENT(101, "直客商务合作协议");
+    SELF_CUSTOMER (1, "自助客户"),
+    AGENT_CUSTOMER(2, "代理商"),
+    DIRECT_CUSTOMER(3, "直客");
 
     private final Integer code;
     private final String desc;
+
 }

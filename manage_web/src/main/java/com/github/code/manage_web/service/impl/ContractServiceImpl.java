@@ -11,6 +11,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -27,6 +29,12 @@ public class ContractServiceImpl extends ServiceImpl<ContractMapper, Contract> i
 
     public Contract getContInfoByContId(String cont_id) {
         return contractMapper.selectOne(new QueryWrapper<Contract>().eq("cont_id", cont_id));
+    }
+
+    public List<Contract> getContInfoByCustomerIdAccountId(String customer_id) {
+        return contractMapper.selectList(new QueryWrapper<Contract>()
+                .eq("customer_id", customer_id)
+        );
     }
 
     public Boolean updateContInfoByContId(String cont_id ,Object value, String fields) {

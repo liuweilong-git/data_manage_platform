@@ -5,6 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum CustomerType {
+public enum DataTypeEnum {
+    REFUND (1, "退款模块的数据");
 
+    private final Integer code;
+    private final String desc;
 }

@@ -1,5 +1,7 @@
 package com.github.code.manage_web.service.cert.handle;
 
+import com.github.code.manage_web.domain.crm.Customers;
+import com.github.code.manage_web.domain.manage.AccountInfo;
 import com.github.code.manage_web.dto.RunInstanceDto;
 import com.github.code.manage_web.service.common.handle.UpdateStrategy;
 import com.github.code.manage_web.domain.cert.CompanyInfo;
@@ -7,6 +9,9 @@ import com.github.code.manage_web.service.impl.CompanyInfoServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -19,9 +24,18 @@ public class UpdateCertStatus implements UpdateStrategy {
     private CompanyInfoServiceImpl companyInfoServiceImpl;
 
     @Override
+    public Map<String, Object> select(AccountInfo accountInfo) {
+        String customer_id = accountInfo.getCustomerId();
+        CompanyInfo companyInfo = companyInfoServiceImpl.getCompanyInfoByCustomerId(customer_id);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("certStatus", companyInfo.getCertStatus());
+        return resultMap;
+    }
+
+    @Override
     public boolean update(RunInstanceDto data, Object value) {
 
-        int customer_id = data.getCustomerId();
+        String customer_id = data.getCustomerId();
         try {
             CompanyInfo companyInfo = companyInfoServiceImpl.getCompanyInfoByCustomerId(customer_id);
             log.info("查询出了相关数据 customer_id: {} company_info {}", customer_id, companyInfo);

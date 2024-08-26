@@ -13,7 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 
 public interface ICompanyInfoService extends IService<CompanyInfo> {
-    CompanyInfo getCompanyInfoByCustomerId(Integer customerId);
-    Boolean updateCompanyInfoByCustomerID(Integer customerId ,Object value, String fields);
+    CompanyInfo getCompanyInfoByCustomerId(String customerId);
+    Boolean updateCompanyInfoByCustomerID(String customerId ,Object value, String fields);
 
 }

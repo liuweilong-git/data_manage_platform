@@ -1,5 +1,6 @@
 package com.github.code.manage_web.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.code.manage_web.domain.manage.TestDataAttribute;
 import com.github.code.manage_web.dto.DataListWebReqDto;
@@ -21,6 +22,7 @@ import java.util.List;
  * @since 2024-08-19
  */
 @Service
+@DS("manage")
 public class TestDataAttributeServiceImpl extends ServiceImpl<TestDataAttributeMapper, TestDataAttribute> implements ITestDataAttributeService {
 
     @Resource

@@ -1,6 +1,5 @@
 package com.github.code.manage_web.dto;
 import com.github.code.manage_web.domain.manage.RunInstance;
-import com.github.code.manage_web.domain.manage.TestDataAttribute;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,8 +33,6 @@ public class RunInstanceDto {
         dto.setAtomicId(runInstance.getAtomicId());
         dto.setAfterValue(runInstance.getAfterValue());
         //需要添加一些其他元素
-
-
         return dto;
 
 }

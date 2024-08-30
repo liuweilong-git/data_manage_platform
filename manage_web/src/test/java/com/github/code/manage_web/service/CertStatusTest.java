@@ -46,7 +46,8 @@ public class CertStatusTest {
     void testUpdateRunInstance(){
         RunInstanceDto data = new RunInstanceDto();
         data.setCustomerId("6001234");
-        data.setAttrId(2);
+        data.setTestDataId("1700000001");
+        data.setAttrKey("qualification_type");
         data.setId(1);
         updateService.update(data);
     }

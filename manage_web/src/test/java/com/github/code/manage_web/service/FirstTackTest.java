@@ -2,22 +2,20 @@ package com.github.code.manage_web.service;
 
 import com.github.code.manage_common.enums.AttributeIsAutoUpdateEnum;
 import com.github.code.manage_common.enums.CertStatusEnum;
-import com.github.code.manage_common.enums.ContStatusEnum;
 import com.github.code.manage_common.enums.DataTypeEnum;
+import com.github.code.manage_common.enums.RunStatusEnum;
 import com.github.code.manage_common.req.ActualDataInfoListReq;
 import com.github.code.manage_web.domain.manage.AccountInfo;
 import com.github.code.manage_web.domain.manage.TestDataAttribute;
+import com.github.code.manage_web.domain.manage.UpdateBatch;
 import com.github.code.manage_web.dto.DataListWebReqDto;
-import com.github.code.manage_web.dto.RunInstanceDto;
 import com.github.code.manage_web.service.cert.ICompanyInfoService;
-import com.github.code.manage_web.service.cert.handle.UpdateCertStatus;
-import com.github.code.manage_web.service.cert.handle.UpdateQualificationType;
 import com.github.code.manage_web.service.impl.TestDataAttributeServiceImpl;
 import com.github.code.manage_web.service.impl.TestDataServiceImpl;
-import com.github.code.manage_web.service.manage.ITestDataAttributeService;
+import com.github.code.manage_web.service.impl.UpdateBatchServiceImpl;
+import com.github.code.manage_web.service.manage.handle.DataManageOperateService;
 import com.github.code.manage_web.service.manage.handle.QueryDataService;
-import com.github.code.manage_web.service.manage.handle.UpdateService;
-import jakarta.annotation.Resource;
+import com.github.code.manage_web.task.GenerateDataBatchTask;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,11 +23,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-public class QueryDataListTest {
+public class FirstTackTest {
     @Autowired
     private ICompanyInfoService companyInfoService;
     @Autowired
-    private UpdateCertStatus updateCertStatus;
+    private UpdateBatchServiceImpl updateBatchService;
     @Autowired
     private TestDataAttributeServiceImpl testDataAttributeService;
 
@@ -39,31 +37,30 @@ public class QueryDataListTest {
     @Autowired
     private QueryDataService queryDataService;
 
+    @Autowired
+    private DataManageOperateService dataManageOperateService;
+
+    @Autowired
+    private GenerateDataBatchTask generateDataBatchTask;
+
 
     @Test
     void testGetById(){
         System.out.println(companyInfoService.getById(1));
     }
 
-    @Test
-    void testUpdate(){
-        RunInstanceDto data = new RunInstanceDto();
-        data.setCustomerId("6001234");
-        Integer value = 2;
-        updateCertStatus.update(data,value);
-    }
 
 
     @Test
     void testDateList(){
-        testDataService.getDataList(DataTypeEnum.REFUND,"test");
+        testDataService.getDataList(DataTypeEnum.REFUND,null);
     }
 
     @Test
     void testDateAttr(){
         String test_data_id = "1700000001";
         List<TestDataAttribute> testDataAttributes = testDataAttributeService.
-                getTestDataAttributeByTestDataId(test_data_id, null);
+                getTestDataAttributeByTestDataId(test_data_id, AttributeIsAutoUpdateEnum.YES.getCode());
         AccountInfo accountInfo = AccountInfo.convert(testDataAttributes);
         System.out.println(accountInfo);
     }
@@ -98,14 +95,11 @@ public class QueryDataListTest {
         System.out.println(queryDataService.accountList(data));
     }
 
+
     @Test
-    void testSelectDataListNoAccountId(){
-        String test_data_id = "1700000001";
-        DataListWebReqDto data = new DataListWebReqDto();
-        data.setCertStatus(CertStatusEnum.EXPIRED);
-        data.setContStatus(ContStatusEnum.ARCHIVED);
-//        data.setAccountId(test_data_id);
-//        queryDataService.ActualAccountList(actualDataInfoListReq);
-        System.out.println(queryDataService.accountList(data));
+    void testFirstTask(){
+        generateDataBatchTask.generateBatch();
     }
+
+
 }

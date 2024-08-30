@@ -1,6 +1,7 @@
 package com.github.code.manage_web.service.manage.handle;
 
 import com.github.code.manage_common.enums.AtomicKeyType;
+import com.github.code.manage_common.enums.AttributeIsAutoUpdateEnum;
 import com.github.code.manage_common.enums.DataTypeEnum;
 import com.github.code.manage_common.req.ActualDataInfoListReq;
 import com.github.code.manage_web.controller.utils.ConvertEnumToPascalCase;
@@ -9,8 +10,6 @@ import com.github.code.manage_web.domain.manage.AccountInfo;
 import com.github.code.manage_web.domain.manage.TestData;
 import com.github.code.manage_web.domain.manage.TestDataAttribute;
 import com.github.code.manage_web.dto.DataListWebReqDto;
-import com.github.code.manage_web.dto.DataListWebRespDto;
-import com.github.code.manage_common.resp.PageResult;
 import com.github.code.manage_web.service.common.handle.UpdateStrategy;
 import com.github.code.manage_web.service.impl.*;
 import jakarta.annotation.Resource;
@@ -62,7 +61,7 @@ public class QueryDataService {
             return accountListResult;
         }else {
             log.info("不存在account_id，查询所有非自动化数据，结合其他条件的限制。筛选出需要返回的账号列表");
-            List<TestData> accountList = testDataService.getDataList(DataTypeEnum.REFUND);
+            List<TestData> accountList = testDataService.getDataList(DataTypeEnum.REFUND, "test");
             List<AccountInfo> accountInfoList = new ArrayList<>();
             for(TestData testData : accountList){
                 AccountInfo expectedAccountInfo = this.expectedAccountList(testData.getDataId());
@@ -88,6 +87,10 @@ public class QueryDataService {
     public AccountInfo ActualAccountList(ActualDataInfoListReq req) {
         //1.根据test_data_id查询test_data_attribute获取预期值
         String accountId = req.getAccountId();
+        return ActualAccountListByAccountId(accountId);
+    }
+
+    public AccountInfo ActualAccountListByAccountId(String accountId) {
         AccountCustomerRef customerInfo = accountCustomerRefService.getCustomerInfoByCustomerId(accountId);
         AccountInfo accountInfo = new AccountInfo();
         accountInfo.setCustomerId(customerInfo.getCustomerId());
@@ -125,7 +128,7 @@ public class QueryDataService {
      */
     private AccountInfo expectedAccountList(String accountId) {
         List<TestDataAttribute> testDataAttributes = testDataAttributeService.
-                getTestDataAttributeByTestDataId(accountId);
+                getTestDataAttributeByTestDataId(accountId, AttributeIsAutoUpdateEnum.YES.getCode());
         return AccountInfo.convert(testDataAttributes);
     }
 
@@ -178,6 +181,32 @@ public class QueryDataService {
         return result;
     }
 
+    public List<Map<String, Object>> findNoSameAttribute(AccountInfo needCheck ,AccountInfo actual) throws IllegalAccessException {
+        List<Map<String, Object>> differences = new ArrayList<>();
+        String accountId = needCheck.getAccountId();
+        Field[] fields = AccountInfo.class.getDeclaredFields();
+
+        for (Field field : fields) {
+            field.setAccessible(true); // 允许访问私有字段
+
+            Object valueNeedCheck = field.get(needCheck); // A对象中的值
+            Object valueActual = field.get(actual); // B对象中的值
+
+            // 如果A和B对象中的字段值不同
+            if (valueNeedCheck != null && !valueNeedCheck.equals(valueActual) &&valueActual != null) {
+                Map<String, Object> diffRecord = new HashMap<>();
+                diffRecord.put("fieldName", field.getName());  // 字段名
+                diffRecord.put("accountId", accountId);  // 字段名
+                diffRecord.put("valueNeedCheck", valueNeedCheck);              // 预期值中的值
+                diffRecord.put("valueActual", valueActual);              // 实际的值
+                differences.add(diffRecord);
+            } else if (valueNeedCheck != null && valueActual == null) {
+                log.error("存在预期值，但是没有查询到实际值数据accountId{}",accountId);
+
+            }
+        }
+        return differences;
+    }
     /**
      * @param requestDto
      * @param accountInfoList

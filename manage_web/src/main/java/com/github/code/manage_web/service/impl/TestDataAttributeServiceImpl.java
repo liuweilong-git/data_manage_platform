@@ -28,16 +28,29 @@ public class TestDataAttributeServiceImpl extends ServiceImpl<TestDataAttributeM
     @Resource
     private TestDataAttributeMapper testDataAttributeMapper;
 
-    public TestDataAttribute getTestDataAttributeByAttrId(RunInstanceDto data) {
+    public TestDataAttribute getTestDataAttribute(RunInstanceDto data) {
         return testDataAttributeMapper.selectOne(new QueryWrapper<TestDataAttribute>()
-                .eq(data.getAttrId()!=null,"id", data.getAttrId()));
+                .eq(data.getTestDataId()!=null,"test_data_id", data.getTestDataId())
+                .eq(data.getAttrKey()!=null,"attr", data.getAttrKey()));
     }
 
-    public List<TestDataAttribute> getTestDataAttributeByTestDataId(String test_data_id) {
+    /**
+     * @param test_data_id  账号id
+     * @param auto_update 是否需要更新的属性
+     * @return 获取当前账号的对应的属性数据
+     */
+    public List<TestDataAttribute> getTestDataAttributeByTestDataId(String test_data_id, Integer auto_update) {
         return testDataAttributeMapper.selectList(new QueryWrapper<TestDataAttribute>()
-                .eq(test_data_id!=null,"test_data_id", test_data_id));
+                .eq(test_data_id!=null,"test_data_id", test_data_id)
+                .eq(auto_update!= null,"auto_update", auto_update)
+        );
     }
 
+
+    /**
+     * @param dataListWebReqDto 废弃
+     * @return
+     */
     public List<TestDataAttribute> queryByParams(DataListWebReqDto dataListWebReqDto) {
         QueryWrapper<TestDataAttribute> queryWrapper = new QueryWrapper<>();
 

@@ -7,6 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serial;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -43,11 +45,9 @@ public class RunInstance implements Serializable {
     @Schema(description = "运行状态")
     private Integer runStatus;
 
-    @Schema(description = "属性id")
-    private Integer attrId;
+    @Schema(description = "属性key")
+    private String attrKey;
 
-    @Schema(description = "原子能力id")
-    private Integer atomicId;
 
     @Schema(description = "更新前数据")
     private String beforeValue;
@@ -61,5 +61,12 @@ public class RunInstance implements Serializable {
     @Schema(description = "更新时间")
     private LocalDateTime modifyTime;
 
-
+    public static RunInstance convert(Map<String, Object> noSameAttribute){
+        RunInstance runInstance = new RunInstance();
+        runInstance.setTestDataId(noSameAttribute.get("accountId").toString());
+        runInstance.setAttrKey(noSameAttribute.get("fieldName").toString());
+        runInstance.setBeforeValue(noSameAttribute.get("valueActual").toString());
+        runInstance.setModifyTime(LocalDateTime.now());
+        return runInstance;
+    }
 }

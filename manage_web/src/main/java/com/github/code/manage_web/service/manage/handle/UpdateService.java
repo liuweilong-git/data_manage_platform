@@ -46,8 +46,8 @@ public class UpdateService {
      */
     public void update(RunInstanceDto data) {
 //        1.根据test_data_id查询test_data_attribute获取预期值
-        TestDataAttribute data_attribute = testDataAttributeService.getTestDataAttributeByAttrId(data);
-        String attr = data_attribute.getAttr();
+        TestDataAttribute data_attribute = testDataAttributeService.getTestDataAttribute(data);
+        String attr = data.getAttrKey();
         CnfAtomic cnf_atomic = cnfAtomicService.getCnfAtomicByAttr(attr);
         String atomic_key = cnf_atomic.getAtomicKey();
 //        System.out.println(strategies);

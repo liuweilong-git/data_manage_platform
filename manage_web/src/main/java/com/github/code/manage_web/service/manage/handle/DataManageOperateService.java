@@ -1,14 +1,21 @@
 package com.github.code.manage_web.service.manage.handle;
 
 
-import com.github.code.manage_web.domain.manage.AttributeIsAutoUpdate;
-import com.github.code.manage_web.domain.manage.TestDataAttribute;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
+import com.github.code.manage_common.enums.AttributeIsAutoUpdateEnum;
+import com.github.code.manage_common.enums.RunStatusEnum;
+import com.github.code.manage_web.domain.manage.*;
 import com.github.code.manage_web.dto.CreateDataReqDto;
 import com.github.code.manage_web.dto.TestDataAttributeDto;
 
+import com.github.code.manage_web.mapper.manage.RunInstanceMapper;
+import com.github.code.manage_web.service.impl.RunInstanceServiceImpl;
 import com.github.code.manage_web.service.impl.TestDataAttributeServiceImpl;
+import com.github.code.manage_web.service.impl.UpdateBatchServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -28,6 +35,15 @@ public class DataManageOperateService {
     @Resource
     private TestDataAttributeDto testDataAttributeDto;
 
+    @Autowired
+    private RunInstanceMapper runInstanceMapper;
+
+    @Resource
+    private RunInstanceServiceImpl runInstanceService;
+
+    @Resource
+    private UpdateBatchServiceImpl updateBatchService;
+
     /**
      * @param req
      * @return 完成属性的添加
@@ -38,12 +54,13 @@ public class DataManageOperateService {
         List<TestDataAttribute> attributesToUpdate = new ArrayList<>();
 
         String testDataId = req.getAccountId();
-        log.info("当前的账号id{}",testDataId);
+        log.info("当前的账号id{}", testDataId);
         if (testDataId == null) {
             return null;
         }
         // 查询现有的TestDataAttribute记录（根据testDataId）
-        List<TestDataAttribute> existingAttributes = testDataAttributeService.getTestDataAttributeByTestDataId(testDataId);
+        List<TestDataAttribute> existingAttributes = testDataAttributeService.
+                getTestDataAttributeByTestDataId(testDataId, null);
         Map<String, TestDataAttribute> existingAttributeMap = existingAttributes.stream()
                 .collect(Collectors.toMap(TestDataAttribute::getAttr, attr -> attr));
 
@@ -98,4 +115,70 @@ public class DataManageOperateService {
         return allAttributes;
     }
 
+    /**
+     * @param noSameAttributes 与实际不同的属性
+     * @return 创建运行实例
+     */
+    public List<RunInstance> createRunInstance(String batchId, List<Map<String, Object>> noSameAttributes) {
+//        String batchId = "batch" +  DateUtil.format(LocalDateTime.now(), "YYYYMMDD")+
+//                RandomUtil.randomInt(1000, 10000);
+        List<RunInstance> runInstanceList = new ArrayList<>();
+        for (Map<String, Object> noSameAttribute : noSameAttributes) {
+            RunInstance runInstance = RunInstance.convert(noSameAttribute);
+            runInstance.setCreateTime(LocalDateTime.now());
+            runInstance.setRunStatus(RunStatusEnum.ADD_SUCCESS.getCode());
+            runInstance.setBatchId(batchId);
+            runInstanceList.add(runInstance);
+        }
+
+        if (!runInstanceList.isEmpty()) {
+            log.info("需要插入的数据testDataId：{},runInstanceList：{}",
+                    noSameAttributes.get(0).get("accountID"), runInstanceList);
+            runInstanceService.saveBatch(runInstanceList);
+        }
+        return runInstanceList;
+    }
+
+//    /**
+//     * @param accountDataList 账号列表
+//     * @return 创建更新批次记录
+//     */
+//    public List<UpdateBatch> createUpdateBatch(List<TestData> accountDataList) {
+//        String batchId = "batch" + DateUtil.format(LocalDateTime.now(), "YYYYMMDD") +
+//                RandomUtil.randomInt(1000, 10000);
+//        List<UpdateBatch> updateBatchList = new ArrayList<>();
+//        for (TestData accountData : accountDataList) {
+//            UpdateBatch updateBatch = new UpdateBatch();
+//            updateBatch.setBatchId(batchId);
+//            updateBatch.setTestDataId(accountData.getDataId());
+//            updateBatch.setCreateTime(LocalDateTime.now());
+//            updateBatch.setModifyTime(LocalDateTime.now());
+//            updateBatch.setRunStatus(RunStatusEnum.ADD_SUCCESS.getCode());
+//            updateBatchList.add(updateBatch);
+//            log.info("需要插入的数据testDataId：{},updateBatch：{}",
+//                    accountData.getDataId(), updateBatch);
+//        }
+//
+//        if (!updateBatchList.isEmpty()) {
+//            updateBatchService.saveBatch(updateBatchList);
+//        }
+//        return updateBatchList;
+//    }
+
+    /**
+     * @param accountId 账号id
+     * @return 创建需要更新的账号的更新批次
+     */
+    public UpdateBatch createUpdateBatchAccount(String accountId, String batchId) {
+        UpdateBatch updateBatch = new UpdateBatch();
+        updateBatch.setBatchId(batchId);
+        updateBatch.setTestDataId(accountId);
+        updateBatch.setCreateTime(LocalDateTime.now());
+        updateBatch.setModifyTime(LocalDateTime.now());
+        updateBatch.setRunStatus(RunStatusEnum.ADD_SUCCESS.getCode());
+        log.info("需要插入的数据testDataId：{},updateBatch：{}", accountId, updateBatch);
+        updateBatchService.save(updateBatch);
+
+        return updateBatch;
+}
 }

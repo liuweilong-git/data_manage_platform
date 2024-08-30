@@ -26,13 +26,29 @@ public class TestDataServiceImpl extends ServiceImpl<TestDataMapper, TestData> i
     @Resource
     private TestDataMapper testDataMapper;
 
-    public List<TestData> getDataList(DataTypeEnum dataType) {
-        //获取退款类型的所有非自动化数据（有效的）
-        return testDataMapper.selectList(
-                new QueryWrapper<TestData>()
-                        .eq("data_type", dataType)
-                        .eq("status", DataStatusEnum.VALID.getCode())
-                        .eq("tag", "test")
-        );
+//    public List<TestData> getDataList(DataTypeEnum dataType) {
+//        //获取退款类型的所有非自动化数据（有效的）
+//        return testDataMapper.selectList(
+//                new QueryWrapper<TestData>()
+//                        .eq("data_type", dataType)
+//                        .eq("status", DataStatusEnum.VALID.getCode())
+//                        .eq("tag", "test")
+//        );
+//    }
+
+    public List<TestData> getDataList(DataTypeEnum dataType, String tag) {
+        //  //获取退款类型的所有数据（有效的）
+        QueryWrapper<TestData> queryWrapper = new QueryWrapper<TestData>()
+                .eq("data_type", dataType)
+                .eq("status", DataStatusEnum.VALID.getCode());
+
+        // 如果 tag 不为空或不为null，添加 tag 条件
+        if (tag != null && !tag.isEmpty()) {
+            queryWrapper.eq("tag", tag);
+        }
+
+        // 执行查询并返回结果
+        return testDataMapper.selectList(queryWrapper);
     }
+
 }

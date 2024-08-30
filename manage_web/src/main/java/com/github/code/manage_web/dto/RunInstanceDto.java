@@ -15,9 +15,10 @@ public class RunInstanceDto {
     private String customerId;
     private String contId;
     //    test_data_attribute表中主键id
-    private Integer attrId;
+//    private Integer attrId;
+    private String attrKey;
     private String valueType;
-    private Integer atomicId;
+//    private Integer atomicId;
 //    cnf_atomic表中的atomic_key
 //    private String atomicKey;
 
@@ -29,8 +30,7 @@ public class RunInstanceDto {
         dto.setBatchId(runInstance.getBatchId());
         dto.setTestDataId(runInstance.getTestDataId());
         dto.setRunStatus(runInstance.getRunStatus());
-        dto.setAttrId(runInstance.getAttrId());
-        dto.setAtomicId(runInstance.getAtomicId());
+        dto.setAttrKey(runInstance.getAttrKey());
         dto.setAfterValue(runInstance.getAfterValue());
         //需要添加一些其他元素
         return dto;

@@ -1,17 +1,10 @@
 package com.github.code.manage_web.domain.manage;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.github.code.manage_web.dto.RunInstanceDto;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
 
-import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -57,34 +50,34 @@ public class AccountInfo implements Serializable {
             String expectedValue = testDataAttribute.getExpectedValue();
 
             switch (attr) {
-                case "qualification_status":
+                case "qualificationStatus":
                     accountInfo.setQualificationStatus(expectedValue);
                     break;
-                case "qualification_type":
+                case "qualificationType":
                     accountInfo.setQualificationType(expectedValue);
                     break;
-                case "cert_status":
+                case "certStatus":
                     accountInfo.setCertStatus(Integer.valueOf(expectedValue));
                     break;
-                case "cont_type":
+                case "contType":
                     accountInfo.setContType(expectedValue);
                     break;
-                case "cont_status":
+                case "contStatus":
                     accountInfo.setContStatus(Integer.valueOf(expectedValue));
                     break;
-                case "cont_serial":
+                case "contSerial":
                     accountInfo.setContSerial(expectedValue);
                     break;
-                case "cont_id":
+                case "contId":
                     accountInfo.setContId(expectedValue);
                     break;
-                case "business_type":
+                case "businessType":
                     accountInfo.setBusinessType(expectedValue);
                     break;
-                case "customer_type":
+                case "customerType":
                     accountInfo.setCustomerType(expectedValue);
                     break;
-                case "customer_id":
+                case "customerId":
                     accountInfo.setCustomerId(expectedValue);
                     break;
                 default:

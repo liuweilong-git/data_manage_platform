@@ -17,4 +17,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class UpdateLogServiceImpl extends ServiceImpl<UpdateLogMapper, UpdateLog> implements IUpdateLogService {
 
+
+
 }

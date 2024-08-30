@@ -60,12 +60,4 @@ public class ContInfoTest {
         updateContSerial.update(data,value);
     }
 
-    @Test
-    void testUpdateRunInstance(){
-        RunInstanceDto data = new RunInstanceDto();
-        data.setCustomerId("6001234");
-        data.setAttrId(2);
-        data.setId(1);
-        updateService.update(data);
-    }
 }

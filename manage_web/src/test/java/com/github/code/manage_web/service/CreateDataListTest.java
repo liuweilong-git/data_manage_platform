@@ -1,5 +1,6 @@
 package com.github.code.manage_web.service;
 
+import com.github.code.manage_common.enums.AttributeIsAutoUpdateEnum;
 import com.github.code.manage_common.enums.CertStatusEnum;
 import com.github.code.manage_common.enums.DataTypeEnum;
 import com.github.code.manage_common.req.ActualDataInfoListReq;
@@ -57,13 +58,14 @@ public class CreateDataListTest {
 
     @Test
     void testDateList(){
-        testDataService.getDataList(DataTypeEnum.REFUND);
+        testDataService.getDataList(DataTypeEnum.REFUND,null);
     }
 
     @Test
     void testDateAttr(){
         String test_data_id = "1700000001";
-        List<TestDataAttribute> testDataAttributes = testDataAttributeService.getTestDataAttributeByTestDataId(test_data_id);
+        List<TestDataAttribute> testDataAttributes = testDataAttributeService.
+                getTestDataAttributeByTestDataId(test_data_id, AttributeIsAutoUpdateEnum.YES.getCode());
         AccountInfo accountInfo = AccountInfo.convert(testDataAttributes);
         System.out.println(accountInfo);
     }
@@ -117,11 +119,11 @@ public class CreateDataListTest {
     void testCreate(){
 
         CreateDataReqDto createDataReqDto = new CreateDataReqDto();
-        createDataReqDto.setAccountId("1700000204");
+        createDataReqDto.setAccountId("17000002000");
         // 设置 customerId
         AttributeIsAutoUpdate customerId = new AttributeIsAutoUpdate();
         customerId.setAttributeName("customerId");
-        customerId.setActualValue("6001234111");
+        customerId.setActualValue("99999999");
         customerId.setAutoUpdate(true);
         createDataReqDto.setCustomerId(customerId);
 
@@ -142,7 +144,7 @@ public class CreateDataListTest {
 // 设置 contId
         AttributeIsAutoUpdate contId = new AttributeIsAutoUpdate();
         contId.setAttributeName("contId");
-        contId.setActualValue("73");
+        contId.setActualValue("730000000");
         contId.setAutoUpdate(false);
         createDataReqDto.setContId(contId);
 

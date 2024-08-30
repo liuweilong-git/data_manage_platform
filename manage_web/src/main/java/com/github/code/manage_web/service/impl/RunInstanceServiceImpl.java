@@ -1,5 +1,6 @@
 package com.github.code.manage_web.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.code.manage_web.domain.manage.RunInstance;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @since 2024-08-19
  */
 @Service
+@DS("manage")
 public class RunInstanceServiceImpl extends ServiceImpl<RunInstanceMapper, RunInstance> implements IRunInstanceService {
     @Resource
     private RunInstanceMapper runInstanceMapper;
@@ -45,5 +47,7 @@ public class RunInstanceServiceImpl extends ServiceImpl<RunInstanceMapper, RunIn
         queryWrapper.eq("batch_id",batchId);
         return runInstanceMapper.selectList(queryWrapper);
     }
+
+
 }
 

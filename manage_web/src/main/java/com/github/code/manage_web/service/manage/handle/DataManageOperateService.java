@@ -5,14 +5,17 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.github.code.manage_common.enums.AttributeIsAutoUpdateEnum;
 import com.github.code.manage_common.enums.RunStatusEnum;
+import com.github.code.manage_common.enums.TriggerTypeEnum;
 import com.github.code.manage_web.domain.manage.*;
 import com.github.code.manage_web.dto.CreateDataReqDto;
+import com.github.code.manage_web.dto.RunInstanceDto;
 import com.github.code.manage_web.dto.TestDataAttributeDto;
 
 import com.github.code.manage_web.mapper.manage.RunInstanceMapper;
 import com.github.code.manage_web.service.impl.RunInstanceServiceImpl;
 import com.github.code.manage_web.service.impl.TestDataAttributeServiceImpl;
 import com.github.code.manage_web.service.impl.UpdateBatchServiceImpl;
+import com.github.code.manage_web.service.impl.UpdateLogServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,9 @@ public class DataManageOperateService {
 
     @Resource
     private UpdateBatchServiceImpl updateBatchService;
+
+    @Resource
+    private UpdateLogServiceImpl updateLogService;
 
     /**
      * @param req
@@ -120,8 +126,7 @@ public class DataManageOperateService {
      * @return 创建运行实例
      */
     public List<RunInstance> createRunInstance(String batchId, List<Map<String, Object>> noSameAttributes) {
-//        String batchId = "batch" +  DateUtil.format(LocalDateTime.now(), "YYYYMMDD")+
-//                RandomUtil.randomInt(1000, 10000);
+
         List<RunInstance> runInstanceList = new ArrayList<>();
         for (Map<String, Object> noSameAttribute : noSameAttributes) {
             RunInstance runInstance = RunInstance.convert(noSameAttribute);
@@ -180,5 +185,24 @@ public class DataManageOperateService {
         updateBatchService.save(updateBatch);
 
         return updateBatch;
-}
+    }
+
+    public UpdateLog createUpdateLog(RunInstanceDto runInstance, String afterValue) {
+        UpdateLog updateLog = new UpdateLog();
+        updateLog.setTestDataId(runInstance.getTestDataId());
+        updateLog.setData(runInstance.getTestDataId());
+        updateLog.setAttr(runInstance.getAttrKey());
+        updateLog.setBeforeValue(runInstance.getBeforeValue());
+        updateLog.setAfterValue(afterValue);
+        updateLog.setTriggerType(TriggerTypeEnum.AUTOMATIC_TRIGGER.getCode());
+        updateLog.setCreatorId("root");
+        updateLog.setBatchId(runInstance.getBatchId());
+        updateLog.setInstanceId(String.valueOf(runInstance.getId()));
+        updateLog.setCreateTime(LocalDateTime.now());
+        updateLog.setModifyTime(LocalDateTime.now());
+        log.info("需要插入的数据testDataId：{},updateLog：{}", runInstance.getTestDataId(), updateLog);
+        updateLogService.save(updateLog);
+
+        return updateLog;
+    }
 }

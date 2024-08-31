@@ -1,7 +1,9 @@
 package com.github.code.manage_web.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.github.code.manage_common.enums.RunStatusEnum;
+import com.github.code.manage_web.domain.cont.Contract;
 import com.github.code.manage_web.domain.manage.RunInstance;
 import com.github.code.manage_web.domain.manage.UpdateBatch;
 import com.github.code.manage_web.dto.RunInstanceDto;
@@ -41,6 +43,10 @@ public class UpdateBatchServiceImpl extends ServiceImpl<UpdateBatchMapper, Updat
         }catch (Exception e) {
             return Boolean.FALSE;
         }
+    }
+
+    public UpdateBatch getLatestUpdateBatch() {
+        return updateBatchMapper.selectOne(new QueryWrapper<UpdateBatch>().orderByDesc("id").last("limit 1"));
     }
 
 }

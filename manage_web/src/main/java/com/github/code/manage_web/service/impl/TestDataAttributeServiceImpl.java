@@ -34,6 +34,12 @@ public class TestDataAttributeServiceImpl extends ServiceImpl<TestDataAttributeM
                 .eq(data.getAttrKey()!=null,"attr", data.getAttrKey()));
     }
 
+    public TestDataAttribute getTestDataAttributeByAttr(String accountId , String attrKey) {
+        return testDataAttributeMapper.selectOne(new QueryWrapper<TestDataAttribute>()
+                .eq(accountId!=null,"test_data_id", accountId)
+                .eq(attrKey!=null,"attr", attrKey));
+    }
+
     /**
      * @param test_data_id  账号id
      * @param auto_update 是否需要更新的属性

@@ -30,19 +30,12 @@ public class GenerateDataBatchTask {
     @Autowired
     private TestDataServiceImpl testDataService;
 
-    @Autowired
-    private TestDataAttributeServiceImpl testDataAttributeService;
-
-    @Autowired
-    private QueryDataService queryDataService;
-
     @Resource
     private DataManageOperateService dataManageOperateService;
 
-    @Resource
-    private UpdateBatchServiceImpl updateBatchService;
 
-    @Scheduled(cron = "0 0 * * * ?")
+//    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ? ")
     public void generateBatch() {
         String batchId = "batch" + DateUtil.format(LocalDateTime.now(), "YYYYMMDD") +
                 RandomUtil.randomInt(1000, 10000);
@@ -54,35 +47,40 @@ public class GenerateDataBatchTask {
         for (TestData testData : accountDataList) {
             // 获取每个账号id需要更新的属性,转换为一个对象
             String accountId = testData.getDataId();
-            List<TestDataAttribute> dataAttributeNeedUpdate = testDataAttributeService.
-                    getTestDataAttributeByTestDataId(accountId,
-                            AttributeIsAutoUpdateEnum.YES.getCode());
-            log.info("获取需要自动更新的属性{}", dataAttributeNeedUpdate);
-            if (!dataAttributeNeedUpdate.isEmpty()) {
-                AccountInfo needUpdateAccountAttribute = AccountInfo.convert(dataAttributeNeedUpdate);
-                //查询实际值，判断实际值是否与预期值想等，更新run_instance
-                AccountInfo actualAccountAttribute = queryDataService.ActualAccountListByAccountId(accountId);
-                log.info("账号需要检验的属性{}", needUpdateAccountAttribute);
-                log.info("账号实际的属性{}", actualAccountAttribute);
-                try {
-                    List<Map<String, Object>> noSameAttribute = queryDataService.findNoSameAttribute
-                            (needUpdateAccountAttribute, actualAccountAttribute);
-                    if (!noSameAttribute.isEmpty()) {
-                        UpdateBatch updateBatch = dataManageOperateService.createUpdateBatchAccount(accountId,batchId);
-                        List<RunInstance> createRunInstances = dataManageOperateService.createRunInstance(batchId, noSameAttribute);
-                        updateBatchService.updateBatchRunStatus(updateBatch, RunStatusEnum.SEND_SUCCESS);
-                        log.info("当前账号accountId{}创建数据成功createRunInstances{}", accountId, createRunInstances);
+            Boolean updateBatch = dataManageOperateService.createUpdateBatch(accountId, batchId);
+            if (updateBatch) {
+                log.info("当前账号accountId{}处理完成", accountId);
+            }
 
-                    } else {
-                        log.info("当前账号accountId{}不需要更新", accountId);
-                    }
-
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-
+//            List<TestDataAttribute> dataAttributeNeedUpdate = testDataAttributeService.
+//                    getTestDataAttributeByTestDataId(accountId,
+//                            AttributeIsAutoUpdateEnum.YES.getCode());
+//            log.info("获取需要自动更新的属性{}", dataAttributeNeedUpdate);
+//            if (!dataAttributeNeedUpdate.isEmpty()) {
+//                AccountInfo needUpdateAccountAttribute = AccountInfo.convert(dataAttributeNeedUpdate);
+//                //查询实际值，判断实际值是否与预期值想等，更新run_instance
+//                AccountInfo actualAccountAttribute = queryDataService.ActualAccountListByAccountId(accountId);
+//                log.info("账号需要检验的属性{}", needUpdateAccountAttribute);
+//                log.info("账号实际的属性{}", actualAccountAttribute);
+//                try {
+//                    List<Map<String, Object>> noSameAttribute = queryDataService.findNoSameAttribute
+//                            (needUpdateAccountAttribute, actualAccountAttribute);
+//                    if (!noSameAttribute.isEmpty()) {
+//                        UpdateBatch updateBatch = dataManageOperateService.createUpdateBatchAccount(accountId,batchId);
+//                        List<RunInstance> createRunInstances = dataManageOperateService.createRunInstance(batchId, noSameAttribute);
+//                        updateBatchService.updateBatchRunStatus(updateBatch, RunStatusEnum.SEND_SUCCESS);
+//                        log.info("当前账号accountId{}创建数据成功createRunInstances{}", accountId, createRunInstances);
+//
+//                    } else {
+//                        log.info("当前账号accountId{}不需要更新", accountId);
+//                    }
+//
+//                } catch (IllegalAccessException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
             }
         }
 
-    }
+
 }

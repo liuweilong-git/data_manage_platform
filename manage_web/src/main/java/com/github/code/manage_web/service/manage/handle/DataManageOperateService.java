@@ -1,8 +1,5 @@
 package com.github.code.manage_web.service.manage.handle;
 
-
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.RandomUtil;
 import com.github.code.manage_common.enums.AttributeIsAutoUpdateEnum;
 import com.github.code.manage_common.enums.RunStatusEnum;
 import com.github.code.manage_common.enums.TriggerTypeEnum;
@@ -11,19 +8,18 @@ import com.github.code.manage_web.dto.CreateDataReqDto;
 import com.github.code.manage_web.dto.RunInstanceDto;
 import com.github.code.manage_web.dto.TestDataAttributeDto;
 
-import com.github.code.manage_web.mapper.manage.RunInstanceMapper;
 import com.github.code.manage_web.service.impl.RunInstanceServiceImpl;
 import com.github.code.manage_web.service.impl.TestDataAttributeServiceImpl;
 import com.github.code.manage_web.service.impl.UpdateBatchServiceImpl;
 import com.github.code.manage_web.service.impl.UpdateLogServiceImpl;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
 
 import java.util.List;
 import java.util.Map;
@@ -38,8 +34,6 @@ public class DataManageOperateService {
     @Resource
     private TestDataAttributeDto testDataAttributeDto;
 
-    @Autowired
-    private RunInstanceMapper runInstanceMapper;
 
     @Resource
     private RunInstanceServiceImpl runInstanceService;
@@ -49,6 +43,9 @@ public class DataManageOperateService {
 
     @Resource
     private UpdateLogServiceImpl updateLogService;
+
+    @Resource
+    private QueryDataService queryDataService;
 
     /**
      * @param req
@@ -205,4 +202,43 @@ public class DataManageOperateService {
 
         return updateLog;
     }
+
+
+    /**
+     * @param accountId 创建更新批次
+     * @param batchId 创建更新批次
+     * @return 创建更新批次
+     */
+    public Boolean createUpdateBatch(String accountId, String batchId) {
+        List<TestDataAttribute> dataAttributeNeedUpdate = testDataAttributeService.
+                getTestDataAttributeByTestDataId(accountId,
+                        AttributeIsAutoUpdateEnum.YES.getCode());
+        log.info("获取需要自动更新的属性{}", dataAttributeNeedUpdate);
+        if (!dataAttributeNeedUpdate.isEmpty()) {
+            AccountInfo needUpdateAccountAttribute = AccountInfo.convert(dataAttributeNeedUpdate);
+            //查询实际值，判断实际值是否与预期值想等，更新run_instance
+            AccountInfo actualAccountAttribute = queryDataService.ActualAccountListByAccountId(accountId);
+            log.info("账号需要检验的属性{}", needUpdateAccountAttribute);
+            log.info("账号实际的属性{}", actualAccountAttribute);
+            try {
+                List<Map<String, Object>> noSameAttribute = queryDataService.findNoSameAttribute
+                        (needUpdateAccountAttribute, actualAccountAttribute);
+                if (!noSameAttribute.isEmpty()) {
+                    UpdateBatch updateBatch = this.createUpdateBatchAccount(accountId, batchId);
+                    List<RunInstance> createRunInstances = this.createRunInstance(batchId, noSameAttribute);
+                    updateBatchService.updateBatchRunStatus(updateBatch, RunStatusEnum.SEND_SUCCESS);
+                    log.info("当前账号accountId{}创建数据成功createRunInstances{}", accountId, createRunInstances);
+
+                } else {
+                    log.info("当前账号accountId{}不需要更新", accountId);
+                }
+
+            } catch (IllegalAccessException e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }

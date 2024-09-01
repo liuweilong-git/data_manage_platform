@@ -96,19 +96,20 @@ public class QueryDataService {
         accountInfo.setCustomerId(customerInfo.getCustomerId());
         accountInfo.setAccountId(accountId);
         for (AtomicKeyType keyType : AtomicKeyType.values()) {
+//            遍历所有属性，定义成了一个枚举类
             String attrKey = convertEnumToPascalCase.convertEnumToPascal(keyType.name());
             UpdateStrategy strategy = strategies.get(attrKey);
             if (strategy != null) {
                 Map<String, Object> attr = strategy.select(accountInfo);
+                // 调用当前实现类的select方法获取属性值
                 for (Map.Entry<String, Object> entry : attr.entrySet()) {
                     String fieldName = entry.getKey();  // 获取 Map 中的 key
                     Object fieldValue = entry.getValue();  // 获取 Map 中的 value
                     try {
-                        // 获取 AccountInfo 对象的对应字段
+                        // 通过反射获取 AccountInfo 对象的对应字段
                         Field field = AccountInfo.class.getDeclaredField(fieldName);
                         field.setAccessible(true);  // 设置为可访问
-
-                        // 设置字段的值
+                        // 通过反射设置字段的值
                         log.info("当前属性key{} 值{}", fieldName, fieldValue);
                         field.set(accountInfo, fieldValue);
                     } catch (NoSuchFieldException | IllegalAccessException e) {

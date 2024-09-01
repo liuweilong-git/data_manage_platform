@@ -44,6 +44,9 @@ public class UpdateService {
 
     @Autowired
     public UpdateService(List<UpdateStrategy> strategyList) {
+//        这个注解用于让 Spring 自动注入依赖。这里意味着 UpdateService 类需要依赖
+//        List<UpdateStrategy>，Spring 容器会自动把实现了 UpdateStrategy
+//        接口的所有类的实例传入 strategyList 这个参数中。
         this.strategies = strategyList.stream()
                 .collect(Collectors.toMap(strategy -> strategy.getClass().getSimpleName()
 //                        .replace("Strategy", "")
@@ -59,9 +62,8 @@ public class UpdateService {
         String attr = data.getAttrKey();
         CnfAtomic cnf_atomic = cnfAtomicService.getCnfAtomicByAttr(attr);
         String atomic_key = cnf_atomic.getAtomicKey();
-//        System.out.println(strategies);
         UpdateStrategy strategy = strategies.get(atomic_key);
-//        System.out.println(strategy);
+//        根据策略名称选择并执行策略
         if (strategy != null) {
 //            2.更新companyInfo中属性的状态为预期值
             if (strategy.update(data, data_attribute.getExpectedValue())){
